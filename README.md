@@ -10,18 +10,29 @@
 
 <script>
   new Vue({
-    el: '#sidebar',
+    el: '#repos',
     created() {
-        fetch('https://imjcker.com:1997/sys/menu')
-          .then(response => response.json())
-          .then(result => {
-            document.getElementById('sidebar').innerHTML = marked.parse(result.data);
-          })
-          .catch(err => console.log(err));
-         fetch('https://imjcker.com:1997/sys/repos')
+         fetch('https://api.github.com/users/everydoc/repos')
                    .then(response => response.json())
                    .then(result => {
-                     document.getElementById('repos').innerHTML = marked.parse(result.data);
+                        let prePre = '<a href="https://github.com/' ;
+                        let preMid = '" target="_blank" >';
+                        let prePost = '</a>';
+                        let pre = '<img src="https://img.shields.io/github/stars/';
+                        let post = '.svg?style=social">';
+                        let repoList = result.map(repo => {
+                            return {
+                                url: prePre + repo.full_name + preMid + repo.name + prePost,
+                                star: pre + repo.full_name + post,
+                                memo: repo.description
+                            }
+                        });
+
+                        let table = '|项目名称 |星星数量 |项目描述 | \n|:----|:----:|:----|\n';
+                        repoList.forEach(r => {
+                            table += '| ' + r.url + ' |' + r.star + ' |' + r.memo + ' \n'
+                        });
+                     document.getElementById('repos').innerHTML = marked.parse(table);
                    })
                    .catch(err => console.log(err));
       }

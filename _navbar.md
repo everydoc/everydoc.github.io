@@ -1,7 +1,7 @@
 * [首页](/)
 * [资源分享](/resources/)
 * [接口文档](/api/)
-* [about](/about/)
+* [关于](/about/)
 * [工具](/工具/)
   * [域名备案](/工具/domain.md)
   * [spring](/工具/spring.md)
