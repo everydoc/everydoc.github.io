@@ -31,13 +31,13 @@ redis-cli也在src目录下
    ```shell
    docker pull redis:latest
    
-   docker run -d --name redis -p 6379:6379 --restart always -v /root/redis/data:/data redis redis-server --appendonly yes
+   docker run -d --name redis -p 6379:6379 --restart always -v ~/redis/data:/data redis redis-server --appendonly yes
    ```
 
 4. 安装redis commander管理工具
 
    ```shell
-   docker run --name redis-commander -d --restart always --env REDIS_HOSTS=localhost -p 8083:8081 rediscommander/redis-commander:latest
+   docker run --name redis-commander -d --restart always --env REDIS_HOSTS=localhost -p 8081:8081 rediscommander/redis-commander:latest
      
    # or use npm install   
    npm install -g redis-commander
