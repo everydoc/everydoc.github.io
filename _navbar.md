@@ -3,8 +3,5 @@
 * [博客](/blogs/)
 * [每日开源](/gitee/)
 * [工具](/tools/)
-  * [域名备案](/tools/domain.md)
-  * [jrebel](https://github.com/everydoc/jrebel-license-server)
-  * [抖音工具](/tools/tiktok.md)
 * [关于](/about/)
 

@@ -3,15 +3,6 @@
 
 ![公众号](_media/qrcode.jpg)![小程序](_media/mini.jpg)
 
-<div>
-    <form class="needs-validation" style="margin-top: 30px;" novalidate action="https://api.imjcker.com/spider/tiktokDownload_copy" method="get">
-        <div class="row g-3">
-            <div class="col-10">
-                <input type="text" class="form-control" id="inputUrl" name="inputUrl" placeholder="抖音视频链接" style="width:300px;"><button class="btn btn-primary" type="submit">Download</button>
-            </div>
-        </div>
-    </form>
-</div>
 <div id="repos"></div>
 <script>
   new Vue({
