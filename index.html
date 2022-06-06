@@ -41,16 +41,6 @@
       sidebarDisplayLevel: 1,
       mergeNavbar: true,
       formatUpdated: '{MM}/{DD} {HH}:{mm}',
-      // search: {
-      //   maxAge: 3600000, // 过期时间，单位毫秒，默认一天
-      //   paths: 'auto',
-      //   placeholder: '搜索',
-      //   noData: '找不到结果',
-      //   // 搜索标题的最大层级, 1 - 6
-      //   depth: 2,
-      //   hideOtherSidebarContent: true,
-      //   namespace: 'website-1'
-      // },
       count:{
         countable:true,
         fontsize:'0.9em',
@@ -62,13 +52,12 @@
           var footer = [
             '<hr/>',
             '<footer>',
-            '<img class="img-fluid rounded" style="width:200px;height:200px;" src="https://docs.imjcker.com/_media/qrcode.jpg" alt="公众号">',
-            '<img class="img-fluid rounded" style="width:200px;height:200px;" src="https://docs.imjcker.com/_media/mini.jpg" alt="小程序">',
+            '<img class="img-fluid rounded" style="width:200px;height:200px;" src="_media/qrcode.jpg" alt="公众号">',
+            '<img class="img-fluid rounded" style="width:200px;height:200px;" src="_media/mini.jpg" alt="小程序">',
             '<span><a href="https://github.com/everydoc">imjcker</a> &copy;2022.</span>',
             '<span><a href="https://imjcker.com" target="_blank">imjcker.com</a> <a href="https://beian.miit.gov.cn" target="_blank">蜀ICP备2022009402号</a></span>',
             '</footer>'
           ].join('');
-
           hook.afterEach(function(html) {
             return html + footer;
           });
@@ -84,9 +73,6 @@
   <script src="//unpkg.com/prismjs@1/components/prism-yaml.min.js"></script>
   <script src="//unpkg.com/prismjs@1/components/prism-json.min.js"></script>
   <!-- 全文检索 关闭的原因是因为数据是自动生成，无法查询动态结果-->
-<!--  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.js"></script>-->
-
-  <!-- <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script> -->
 
   <!-- 点击复制 -->
   <script src="//unpkg.comd/ocsify-copy-code/dist/docsify-copy-code.min.js"></script>

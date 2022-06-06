@@ -1,7 +1,58 @@
 <span id="busuanzi_container_site_pv" style='display:none'>总访问量：<span id="busuanzi_value_site_pv"></span> 次</span>
 <span id="busuanzi_container_site_uv" style='display:none'>| 总访客数：<span id="busuanzi_value_site_uv"></span> 人</span>
 
-![公众号](_media/qrcode.jpg)![小程序](_media/mini.jpg)
+
+
+> 提供一些接口给大家使用，免费，资源有限，暂时不限流。
+
+
+
+<script>
+  new Vue({
+    el: '#sidebar',
+    data: {
+        api: '关键字统计'
+    },
+    created() {
+        fetch('https://pdf.imjcker.com/sys/menu')
+          .then(response => response.json())
+          .then(result => {
+            document.getElementById('sidebar').innerHTML = marked.parse(result.data);
+          })
+          .catch(err => console.log(err));
+      }
+  })
+</script>
+
+
+
+<div>
+    <form class="needs-validation" style="margin-top: 30px;" novalidate action="https://api.imjcker.com/spider/tiktokDownload_copy" method="get">
+        <div class="row g-3">
+            <div class="col-10">
+                <input type="text" class="form-control" id="inputUrl" name="inputUrl" placeholder="抖音视频链接，不需要去掉多余部分内容" style="width:100%;"><button class="btn btn-primary" type="submit">Download</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<hr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div id="repos"></div>
 <script>
@@ -33,3 +84,4 @@
       }
   })
 </script>
+
