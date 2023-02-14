@@ -7,8 +7,6 @@ categories:
 tags: docker
 ---
 
-
-
 随着Docker技术的不断成熟，越来越多的企业开始考虑使用Docker。
 
 ## docker的好处和优势
@@ -46,8 +44,6 @@ Docker可以确保你的应用程序与资源是分隔开的。
 如上所述，Gartner也承认Docker正在快速地发展。从安全角度来看，Docker确保运行在容器中的应用程序和其他容器中的应用程序是完全分隔与隔离的，在通信流量和管理上赋予你完全的控制权。Docker容器不能窥视运行在其他容器中的进程。从体系结构角度来看，每个容器只使用着自己的资源（从进程到网络堆栈）。
 
 作为紧固安全的一种手段，Docker将宿主机操作系统上的敏感挂载点（例如/proc和/sys）作为只读挂载点，并且使用一种写时复制系统来确保容器不能读取其他容器的数据。Docker也限制了宿主机操作系统上的一些系统调用，并且和SELinux与AppArmor一起运行的很好。此外，在Docker Hub上可以使用的Docker镜像都通过数字签名来确保其可靠性。由于Docker容器是隔离的，并且资源是受限制的，所以即使你其中一个应用程序被黑，也不会影响运行在其它Docker容器上的应用程序。
-
-
 
 ## docker 常用命令
 
@@ -97,17 +93,17 @@ $ sudo apt remove docker docker-engine docker.io
  `/var/lib/docker/` 目录下的内容包括：images, containers, volumes, networks 等等. 社区版Docker现在叫做 `docker-ce`.
 
 2. 安装社区版Docker-ce
-
+   
    你可以选择多种方式来安装Docker， 这里我们使用`Dockers repositories` 来在线安装。
 
 3. 更新`apt` 包索引
-
+   
    ```shell
    sudo apt update
    ```
 
 4. 安装所需包资源
-
+   
    ```shell
    sudo apt install \
        apt-transport-https \
@@ -118,13 +114,13 @@ $ sudo apt remove docker docker-engine docker.io
    ```
 
 5. 添加Docker官方 GPG 
-
+   
    ```
    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
    ```
 
 6. 设置稳定版本
-
+   
    ```shell
    sudo add-apt-repository \
       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
@@ -133,32 +129,26 @@ $ sudo apt remove docker docker-engine docker.io
    ```
 
 7. 再次更新apt源
-
+   
    ```shell
    sudo apt update
    ```
 
 8. 安装最新版本的Docker CE 和containerd
-
+   
    ```shell
    sudo apt-get install docker-ce docker-ce-cli containerd.io
-   
    ```
 
 9. 通过测试 `hello-world` 镜像来确认是否安装成功.
-
+   
    ```shell
    sudo docker run hello-world
-   
    ```
-
+   
    这个命令回下载并在一个容器里开启一个镜像，当这个容器运行时，它会打印一些信息并退出。
 
-   
-
 **CentOS 7**
-
-
 
 ```shell
 # 卸载老版本
@@ -173,15 +163,11 @@ sudo yum install -y docker-ce docker-ce-cli containerd.io
 sudo systemctl start docker
 ```
 
-
-
 **K8s 集群**
-
-
 
 **docker install centos**
 
-~~~shell
+```shell
 docker pull centos:7
 
 sudo docker run --privileged --cap-add SYS_ADMIN -e container=docker -it --network host --name centos7 -p 80:8080  -d  --restart=always centos:7 /usr/sbin/init
@@ -196,8 +182,7 @@ yum install openssh-server -y
 vi /etc/ssh/sshd_config
 systemctl start sshd
 systemctl enable sshd
-
-~~~
+```
 
 docker 创建网络
 
@@ -209,22 +194,25 @@ docker run -d --name xxx --network imjcker-net -p 8080:8080 xxx/xxx:latest
 ```
 
 ## docker 镜像加速
+
 1. CentOS 7 配置
-    ```shell
-    sudo mkdir -p /etc/docker
-    sudo tee /etc/docker/daemon.json <<-'EOF'
-    {
-      "registry-mirrors": ["https://zu9clxov.mirror.aliyuncs.com"]
-    }
-    EOF
-    sudo systemctl daemon-reload
-    sudo systemctl restart docker
-    
-    # "https://zu9clxov.mirror.aliyuncs.com"
-    ```
+   
+   ```shell
+   sudo mkdir -p /etc/docker
+   sudo tee /etc/docker/daemon.json <<-'EOF'
+   {
+     "registry-mirrors": ["https://zu9clxov.mirror.aliyuncs.com"]
+   }
+   EOF
+   sudo systemctl daemon-reload
+   sudo systemctl restart docker
+   
+   # "https://zu9clxov.mirror.aliyuncs.com"
+   ```
+
 2. MacOS
     右键点击桌面顶栏的 docker 图标，选择 Preferences ，在 Daemon 标签（Docker 17.03 之前版本为 Advanced 标签）下的 Registry mirrors 列表.
-    
+
 3. 111
 
 ## docker compose
@@ -237,20 +225,11 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-
 
 # autorization
 sudo chmod +x /usr/local/bin/docker-compose
-
 ```
-
-
-
-
 
 ## kubernetes
 
 ### 安装
-
-
-
-
 
 ### 初始化节点
 
@@ -299,24 +278,17 @@ kubeadm join nas2.imjcker.com:6443 --token crny6e.4m4xl1bjt97vpu7b \
     --discovery-token-ca-cert-hash sha256:3c1638ef886db00df26e938d9479d2c1a9ae3e10db2597a20202fb5b8060d62a 
 ```
 
-
-
 ```shell
 To start administering your cluster from this node, you need to run the following as a regular user:
 
-	mkdir -p $HOME/.kube
-	sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-	sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 Run 'kubectl get nodes' to see this node join the cluster.
-
 ```
 
-
-
 ## kuboard
-
- 
 
 ```shell
 sudo docker run -d \
@@ -332,8 +304,6 @@ sudo docker run -d \
   eipwork/kuboard:v3
 ```
 
-
-
 ## docker build image
 
 ```shell
@@ -344,29 +314,19 @@ docker build -t imjcker/aaa:latest .
 docker push imjcker/aaa:latest
 ```
 
-
-
 ## 容器迁移
-
-
 
 ```shell
 docker commit -p container_id container_backup
 docker save container_backup > container_backup.tar 
 docker load < container_bakcup.tar
-
-
 ```
-
-
 
 ## docker 查看日志
 
 ```shell
 docker logs --tail 100 frps
 ```
-
-
 
 ## 进入docker容器
 
@@ -376,9 +336,7 @@ docker exec -it xxx /bin/bash
 
 ## centos 安装docker
 
-
-
-```shell script
+```shell
 #!/bin/sh
 #created by Alan Turing 2019-12-13 for auto install docker on CentOS 7
 # run with root
@@ -422,13 +380,7 @@ green "启动docker服务"
 sudo systemctl start docker
 green "设置开机启动"
 sudo systemctl enable docker
-
-
 ```
-
-
-
-
 
 # docker 私有仓库搭建
 
@@ -440,15 +392,11 @@ sudo systemctl enable docker
 docker pull registry
 ```
 
-
-
 ## 启动脚本
 
 ```shell
 docker run --name my-registry -d --restart always -p 8090:5000 docker.io/registry 
 ```
-
-
 
 ## 测试
 

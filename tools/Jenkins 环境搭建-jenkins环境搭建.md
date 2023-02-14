@@ -7,8 +7,6 @@ categories:
 tags: Jenkins
 ---
 
-
-
 基于docker搭建Jenkins持续集成环境。
 
 ## 安装Jenkins
@@ -45,7 +43,6 @@ chown -R root:root /var/cache/jenkins
 chown -R root:root /var/log/jenkins
 ## 重启 
 systemctl restart jenkins
-
 ```
 
 # Jenkins
@@ -79,8 +76,6 @@ docker run --name jenkins \
            jenkins/jenkins:2.121.3
 ```
 
-
-
 基于docker搭建Jenkins持续集成环境。
 
 ## 安装Jenkins
@@ -117,16 +112,9 @@ chown -R root:root /var/cache/jenkins
 chown -R root:root /var/log/jenkins
 ## 重启 
 systemctl restart jenkins
-
 ```
 
-
-
-
-
 ## 使用
-
-
 
 配置国内镜像源
 

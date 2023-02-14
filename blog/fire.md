@@ -5,9 +5,8 @@ updated: 2021-11-05 23:32:08.818
 url: https://halo.imjcker.com/archives/fire
 categories: 
 tags: fire
+
 ---
-
-
 
 FIRE --> Financial Independent Retire Early
 
@@ -30,11 +29,11 @@ FIRE --> Financial Independent Retire Early
 ## 退休存款
 
 1. 保本模式
-
+   
    保本模式，就是每年只消费排除通货（按3%每年计算）后的投资收益。
 
 2. 不保本模式
-
+   
    不保本，每年消费额为：投资收益 + 部分本金
 
 方式1适合结婚成立家庭，方式2适合未婚情况。
