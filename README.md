@@ -1,21 +1,18 @@
 <span id="busuanzi_container_site_pv" style='display:none'>总访问量：<span id="busuanzi_value_site_pv"></span> 次</span>
 <span id="busuanzi_container_site_uv" style='display:none'>| 总访客数：<span id="busuanzi_value_site_uv"></span> 人</span>
 
-
-
 ## 说明
 
 > 提供一些接口给大家使用，免费，资源有限，暂时不限流。
 
-
-
-<script>
+<!-- <script>
   new Vue({
     el: '#sidebar',
     data: {
         api: '关键字统计'
     },
     created() {
+        console.log('do nothing')
         fetch('https://pdf.imjcker.com/sys/menu')
           .then(response => response.json())
           .then(result => {
@@ -24,11 +21,11 @@
           .catch(err => console.log(err));
       }
   })
-</script>
-## 抖音去水印下载
+</script> -->
 
+～～## 抖音去水印下载～～
 
-<div>
+<!-- <div>
     <form class="needs-validation" style="margin-top: 30px;" novalidate action="https://api.imjcker.com/spider/tiktokDownload_copy" method="get">
         <div class="row g-3">
             <div class="col-10">
@@ -36,29 +33,18 @@
             </div>
         </div>
     </form>
-</div>
-
-
+</div> -->
 
 <hr>
 
-
 ## 文章目录
-
-
-
-
-
-
-
-
-
 
 <div id="repos"></div>
 <script>
   new Vue({
     el: '#repos',
     created() {
+        console.log('Get github repos')
          fetch('https://api.github.com/users/everydoc/repos')
                    .then(response => response.json())
                    .then(result => {
@@ -85,4 +71,3 @@
   })
 </script>
 <div class="flourish-embed" data-src="story/1588191"><script src="https://public.flourish.studio/resources/embed.js"></script></div>
-

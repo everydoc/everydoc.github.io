@@ -60,39 +60,23 @@ systemctl status frps.service
 ### frp in docker
 
 ```shell
-docker run -d --name frpc --network host -v /etc/frp/frpc.ini:/frp/frpc.ini imjcker/frpc:v0.34.3 
+# frps
+docker run -d --name frps -e FRP=frps -v /etc/frp/frps.ini:/frp/frps.ini --network host imjcker/frp:latest
+
+# frpc
+docker run -d --name frpc -e FRP=frpc -v /etc/frp/frpc.ini:/frp/frpc.ini --network host imjcker/frp:latest
 ```
 
 ### make docker images
 
-for frpc
+通过传参确定启动frps/frpc
 
 ```dockerfile
 FROM alpine:3.8
 MAINTAINER imjcker
 
 WORKDIR /
-ENV FRP_VERSION 0.34.3
-RUN set -x \
-    && wget --no-check-certificate https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_amd64.tar.gz \
-    && mkdir -p /frp \
-    && tar -xzf frp_${FRP_VERSION}_linux_amd64.tar.gz -C /frp/ --strip-components=1 \
-    && rm -f frp_${FRP_VERSION}_linux_amd64.tar.gz \
-    && cd /frp
-
-CMD /frp/frpc -c /frp/frpc.ini
-
-
-```
-
-for frps
-
-```dockerfile
-FROM alpine:3.8
-MAINTAINER imjcker
-
-WORKDIR /
-ENV FRP_VERSION 0.34.3
+ENV FRP_VERSION 0.47.0
 RUN set -x \
     && wget --no-check-certificate https://github.com/fatedier/frp/releases/download/v${FRP_VERSION}/frp_${FRP_VERSION}_linux_amd64.tar.gz \
     && mkdir -p /frp \
@@ -102,8 +86,11 @@ RUN set -x \
 
 VOLUME /frp
 
-CMD /frp/frps -c /frp/frps.ini
+CMD /frp/$FRP -c /frp/$FRP.ini
 
 
 ```
+构建镜像：`docker build -t imjcker/frp:latest .`
+
+推送镜像：`docker push imjcker/frp:latest`
 

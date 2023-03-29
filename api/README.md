@@ -11,7 +11,7 @@
         api: '关键字统计'
     },
     created() {
-        fetch('https://pdf.imjcker.com/sys/menu')
+        fetch('https://api.imjcker.com:1314/sys/menu')
           .then(response => response.json())
           .then(result => {
             document.getElementById('sidebar').innerHTML = marked.parse(result.data);
@@ -20,3 +20,4 @@
       }
   })
 </script>
+

@@ -199,7 +199,7 @@ locale
 
 ```
 
-**开关防火墙**
+### 开关防火墙
 
 1. CentOS
 
@@ -212,6 +212,11 @@ systemctl disable firewall
 firewall-cmd --add-port=6379/tcp --zone=public --permanent
 # 对指定IP开放端口
 firewall-cmd --add-rich-rule="rule family="ipv4" source address="192.168.142.166" port protocol="tcp" port="6379" accept" --permanent
+
+firewall-cmd --zone=public --list-ports
+firewall-cmd --reload
+# 如果添加端口报错 INVALID_PORT，可以直接去对应目录添加配置，然后reload。
+vi /etc/firewalld/zones/public.xml
 
 # 开放端口方法2
 iptables

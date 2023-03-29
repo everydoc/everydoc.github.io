@@ -1,11 +1,6 @@
----
-title: Redis All In One
-date: 2021-11-05 23:32:48.864
-updated: 2022-01-19 01:26:46.587
-url: https://halo.imjcker.com/archives/redis
-categories: 
-tags: redis
----
+# Redis All In One
+
+
 
 ![redis](https://imjcker.com:1990/upload/2022/01/redis-4e8e675dbe5c443da452c2946c4ba700.png)
 1. 安装gcc
@@ -63,7 +58,7 @@ ExecStop=/bin/kill -SIGINT $MAINPID
 WantedBy=multi-user.target
 ```
 
-5. 集群搭建
+## 集群搭建
 
 每台服务器配置
 
