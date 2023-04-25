@@ -3,4 +3,5 @@
 * [k8s安装](/blog/k8s安装)
 * [一个ChatGPT镜像站](blog/ChatGPT)
 * [流行的Linux发行版](/blog/流行的Linux发行版)
+* [群晖乐](blog/群晖乐)
 
