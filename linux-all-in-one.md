@@ -839,3 +839,507 @@ echo "current remote ip: $ip" >> /var/log/ddns.log
 
 ```
 
+
+
+
+
+
+
+![arthas](https://imjcker.com:1990/upload/2022/01/arthas-dca76868c2834330a5c5c644bc5f8a7d.png)
+
+Arthas是Alibaba开源的Java诊断工具，深受开发者喜爱。在线排查问题，无需重启；动态跟踪Java代码；实时监控JVM状态。支持JDK 6+，支持Linux/Mac/Windows，采用命令行交互模式，同时提供丰富的 `Tab` 自动补全功能，进一步方便进行问题的定位和诊断。
+
+下面记录了在centos服务器使用的情况。
+
+
+
+# Arthas
+
+
+
+## 
+
+从GitHub下载最新版全量包`arthas-3.2.0-bin.zip`
+
+https://github.com/alibaba/arthas/releases
+
+解压压缩包. 
+
+```shell
+unzip arthas-3.2.0-bin.zip
+```
+
+![1](/assets/2020/arthas-1.png)
+
+
+
+进入arthas目录. 
+
+```shell
+cd arthas
+```
+
+![2](/assets/2020/arthas-2.png)
+
+启动. 
+
+```shell
+./as.sh
+```
+
+![3](/assets/2020/arthas-3.png)
+
+
+
+在系统中选择已经启动的Java进程对应的编号，出现下图情况表示启动成功。
+
+![4](/assets/2020/arthas-4.png)
+
+
+
+## 命令使用
+
+### 基础命令
+
+- help——查看命令帮助信息
+- cls——清空当前屏幕区域
+- session——查看当前会话的信息
+- reset——重置增强类，将被 Arthas 增强过的类全部还原，Arthas 服务端关闭时会重置所有增强过的类
+- version——输出当前目标 Java 进程所加载的 Arthas 版本号
+- history——打印命令历史
+- quit——退出当前 Arthas 客户端，其他 Arthas 客户端不受影响
+- stop——关闭 Arthas 服务端，所有 Arthas 客户端全部退出
+- keymap——Arthas快捷键列表及自定义快捷键
+
+
+
+### dashboard
+
+打印当前系统的实时数据信息面板包括：当前jvm的线程情况，jvm的内存分配、使用量、GC情况，以及当前运行环境情况。
+
+```shell
+dashboard
+```
+
+![5](/assets/2020/arthas-5.png)
+
+
+
+### monitor
+
+`monitor`是一个方法执行的监控，对匹配的类的方法进行监控。
+
+```shell
+# 监控指定类的指定方法 周期60秒，默认周期120秒；类名和方法名可以使用ognl表达式
+monitor -c 60 com.imjcker.spring.cloud.service.wechat.schedule.CallApiTask CallApi
+```
+
+![6](/assets/2020/arthas-6.png)
+
+| 监控项    | 说明                       |
+| --------- | -------------------------- |
+| timestamp | 时间戳                     |
+| class     | Java类                     |
+| method    | 方法（构造方法、普通方法） |
+| total     | 调用次数                   |
+| success   | 成功次数                   |
+| fail      | 失败次数                   |
+| rt        | 平均RT                     |
+| fail-rate | 失败率                     |
+
+### trace
+
+`trace`追踪方法内部调用情况，渲染和统计整个调用链路上的所有性能开销和追踪调用链路，输出调用链路和耗时情况。
+
+```shell
+# 追踪 ManagerFeign类的 sayHi 方法， 次数 100， 默认200次
+trace com.imjcker.spring.cloud.service.wechat.feign.ManagerFeign sayHi -n 100
+```
+
+![7](/assets/2020/arthas-7.png)
+
+```shell
+# 过滤 CallApiTask 类的 CallApi 方法大于1ms的调用情况。
+trace com.imjcker.spring.cloud.service.wechat.schedule.CallApiTask CallApi '#cost > 1'
+```
+
+![8](/assets/2020/arthas-7.png)
+
+
+
+### stack
+
+`stack`输出当前方法被调用的调用路径。很多时候我们都知道一个方法被执行，但这个方法被执行的路径非常多，或者你根本就不知道这个方法是从那里被执行了，此时你需要的是 stack 命令。
+
+```shell
+# 追踪 ManagerFeign lei 类的 sayHi 方法的调用路径
+stack com.imjcker.spring.cloud.service.wechat.feign.ManagerFeign sayHi
+```
+
+![9](/assets/2020/arthas-9.png)
+
+
+
+### thread
+
+查看当前 JVM 的线程堆栈信息
+
+![10](/assets/2020/arthas-10.png)
+
+
+
+
+
+# ApiSix部署使用
+
+## 1.安装部署
+
+1. 安装epel
+
+   ```shell
+   rpm -ivh epel-release-latest-7.noarch.rpm
+   ```
+
+   
+
+2. 安装etcd
+
+   ```shell
+   tar -xvf etcd-v3.4.13-linux-amd64.tar.gz
+   cp -a etcd-v3.4.13-linux-amd64/etcd etcd-v3.4.13-linux-amd64/etcdctl /usr/bin/
+   nohup etcd >/var/log/etcd.log 2>&1 &
+   
+   # 开机启动
+   
+   ```
+
+   
+
+3. 安装openresty
+
+   ```shell
+   rpm -ivh openresty-*.rpm
+   ```
+
+   
+
+4. 安装apisix
+
+   ```shell
+   yum -y install apisix-2.1-0.el7.noarch.rpm
+   ```
+
+   
+
+5. 启动
+
+   ```shell
+   apisix version
+   apisix start
+   ```
+
+   
+
+## 2.安装dashboard
+
+```shell
+$ sudo yum install -y https://github.com/apache/apisix-dashboard/releases/download/v2.6/apisix-dashboard-2.6-0.x86_64.rpm
+
+$ sudo nohup manager-api -p /usr/local/apisix/dashboard/ &
+```
+
+
+
+
+
+## 3.配置注册中心
+
+对接Eureka
+
+
+
+
+
+## 科学上网
+
+
+科学上网之安装shadowsocks到centos7。
+
+```shell
+# 下载 pip
+curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+# 安装 pip
+python get-pip.py
+# 安装shadowsocks
+pip install shadowsocks
+# 启动shadowsocks
+ssserver -p 13579 -k ss.imjcker.com -m chacha20 --user nobody -d start
+
+```
+
+### service 配置
+
+```shell
+[Unit]
+Description=Shadowsocks Server Daemon
+
+[Service]
+TimeoutStartSec=0
+ExecStart=/usr/bin/ssserver -c /root/shadowsocks/ssconfig.json
+
+[Install]
+WantedBy=multi-user.target
+```
+
+
+
+
+
+
+
+## docker 快速安装
+
+```shell
+docker run -d --name ssserver -p 13579:8388 -p 13579:8388/udp --restart always -e PASSWORD=ss.imjcker.com -e METHOD=chacha20 shadowsocks/shadowsocks-libev:latest
+```
+
+
+
+
+
+# https证书
+
+# SSL教程
+
+
+
+来源：https://cnodejs.org/topic/5be29f7c21d75b74609f4fbf
+
+
+
+```shell
+./certbot-auto certonly  -d *.imjcker.com --manual --preferred-challenges dns --server https://acme-v02.api.letsencrypt.org/directory
+```
+
+
+
+
+
+```shell
+[root@imjcker ~]# certbot --nginx
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+
+Which names would you like to activate HTTPS for?
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+1: imjcker.com
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Select the appropriate numbers separated by commas and/or spaces, or leave input
+blank to select all options shown (Enter 'c' to cancel): 
+Requesting a certificate for imjcker.com
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/imjcker.com/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/imjcker.com/privkey.pem
+This certificate expires on 2021-12-31.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+Deploying certificate
+Successfully deployed certificate for imjcker.com to /etc/nginx/nginx.conf
+Congratulations! You have successfully enabled HTTPS on https://imjcker.com
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+If you like Certbot, please consider supporting our work by:
+ * Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+ * Donating to EFF:                    https://eff.org/donate-le
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+```
+
+# 基于非80/443端口的https证书申请
+
+由于某些原因，在不使用云服务器的时候，由于运营商的封锁，80/443等端口被封锁而无法使用，故此在写下此篇博客，来记录 自己如何通过使用非80/443等常规端口在letsencrypt上申请https证书。
+
+
+
+
+
+## 资料来源
+
+https://letsencrypt.org/zh-cn/docs/challenge-types/#dns-01-%E9%AA%8C%E8%AF%81
+
+#acme.sh 申请证书
+
+## 基于腾讯的dnspod.cn
+
+*注意⚠️：犹豫腾讯升级接口到3.0 要区分开dnspod和两种调用接口的密钥区别*
+
+犹豫acme.sh没有升级相关脚本，现在还是使用老接口。
+
+DP_Id DP_Key 使用的是dnspod token，而不是腾讯云API密钥
+
+## 安装
+
+```shell
+curl https://get.acme.sh | sh -s email=my@example.com
+```
+
+## 配置密钥
+
+`DP_Id`
+`DP_Key`
+
+## 发布
+
+```shell
+ acme.sh --issue --dns dns_dp -d imjcker.com -d '*.imjcker.com'
+```
+
+
+
+
+
+# 通用服务器配置
+
+# 服务器配置
+
+## 群晖虚拟机设置
+
+### 开启IPv6
+
+通过克隆基础版本centos虚拟机，导致系统无法获取到IPv6，这是因为网卡的uuid一致导致的，需要到`/etc/sysconfig/network-script/ifcfg-xxx`修改UUID。
+
+
+
+### 装载工具
+
+在虚拟机的编辑-->其它，其它ISO文件选择synology-vmm-guest-tool,并在虚拟机执行，`yum -y install qemu-guest-agent`。
+
+
+
+### 安装动态域名解析DDNS
+
+下载GitHub的ddns-go，并根据其说明安装配置
+
+如果有docker，执行`docker run -d --name ddns --restart=always --net=host -v /etc/ddns-go:/root jeessy/ddns-go:latest`
+
+#### 配置
+
+> 300443 0cac346013efcabf7b2a096364963136
+
+
+
+
+
+### 防火墙
+
+
+
+1. 开通指定端口：`firewall-cmd --add-port=9876/tcp --zone=public --permanent`
+2. 刷新防火墙：`firewall-cmd --reload`
+3. 查看开通端口：`firewall-cmd --zone=public --list-ports`
+4. 不安全策略，关闭防火墙：`systemctl disable firewalld`
+
+
+
+## 一般vps配置
+
+```
+# 设置快捷键
+cat >> ~/.bashrc <<EOF
+alias cc='sync; echo 3 > /proc/sys/vm/drop_caches'
+alias fm='free -m'
+# Dnspod token
+export DP_Id="300443"
+export DP_Key="0cac346013efcabf7b2a096364963136"
+EOF
+
+soruce .bashrc
+
+# 安装docker
+curl https://get.docker.com | sh
+systemctl enable docker && systemctl start docker
+
+# 安装nginx
+yum -y install nginx
+systemctl enable nginx && systemctl start nginx
+
+# 申请ssl证书
+curl https://get.acme.sh | sh -s email=helloalanturing@icloud.com
+acme.sh --issue --dns dns_dp -d imjcker.com -d *.imjcker.com
+# 无法获取脚本的话使用git克隆
+git clone https://github.com/acmesh-official/acme.sh.git
+cd ./acme.sh
+./acme.sh --install -m helloalanturing@icloud.com
+
+# 安装v2ray
+curl https://raw.githubusercontent.com/mack-a/v2ray-agent/master/install.sh -o v2ray.sh && chmod +x v2ray.sh && sh v2ray.sh
+# v2raya 
+docker run -d \
+  --restart=always \
+  --privileged \
+  --network=host \
+  --name v2raya \
+  -e V2RAYA_LOG_FILE=/tmp/v2raya.log \
+  -v /lib/modules:/lib/modules:ro \
+  -v /etc/resolv.conf:/etc/resolv.conf \
+  -v /etc/v2raya:/etc/v2raya \
+  mzz2017/v2raya
+
+# 启动frps
+
+```
+
+
+
+# 卸载阿里云监控软件
+
+
+
+## 最新云服务器已经不支持这种方式了，需手动去云平台卸载。
+
+
+
+```shell
+curl http://update.aegis.aliyun.com/download/uninstall.sh | sh
+curl http://update.aegis.aliyun.com/download/quartz_uninstall.sh | sh
+```
+
+
+
+## 删除服务
+
+```shell
+pkill aliyun-service
+rm -fr /etc/init.d/agentwatch /usr/sbin/aliyun-service
+rm -rf /usr/local/aegis*
+```
+
+
+
+# centos 7 install pip
+
+您可以按照以下步骤在 CentOS 7 上安装 pip：
+
+更新您的系统：
+
+```shell
+sudo yum update
+```
+
+安装必要的软件包：
+
+```shell
+sudo yum install epel-release
+sudo yum install python-pip
+```
+
+验证 pip 是否安装成功：
+
+```shell
+pip --version
+```
+
+如果一切顺利，您应该能够看到安装的 pip 版本号。
+
+如果出现错误，您可能需要安装一些其他的软件包或更新您的系统。
+
